@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   root to: "home#index"
   get 'dashboard', to: 'home#dashboard', as: :dashboard
 
+  resource :profile, only: [:show, :edit, :update]
+
   get "service-worker" => "rails/pwa#service_worker"
   get "manifest" => "rails/pwa#manifest"
 
