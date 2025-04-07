@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= content_for(:title) || "Volunteers App" %></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= yield :head %>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+<nav class="bg-blue-600 text-white p-4 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    <%= link_to "Volunteers App", root_path, class: "text-xl font-bold" %>
+    <div class="flex space-x-4">
+      <% if user_signed_in? %>
+        <span class="mr-4">Welcome, <%= current_user.email %></span>
+        <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+                      class: "bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition" %>
+      <% else %>
+        <%= link_to "Sign In", new_user_session_path,
+                    class: "bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition" %>
+        <%= link_to "Sign Up", new_user_registration_path,
+                    class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+
+<main class="container mx-auto p-4">
+  <%= yield %>
+</main>
+</body>
+</html>

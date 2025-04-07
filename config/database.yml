@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # Настройки для Docker (соответствуют docker-compose.yml)
+  host: <%= ENV.fetch("DATABASE_HOST") { "db" } %>
+  username: <%= ENV.fetch("POSTGRES_USER") { "volunteer" } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { "password123" } %>
+  port: 5432
+
+development:
+  <<: *default
+  database: volunteers_development
+
+test:
+  <<: *default
+  database: volunteers_test
+
+production:
+  <<: *default
+  database: volunteers_production
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
