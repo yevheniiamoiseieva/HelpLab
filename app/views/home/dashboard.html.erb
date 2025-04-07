@@ -2,7 +2,13 @@
   <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Welcome, <%= current_user.email %>!</h1>
 
   <div class="text-center">
-    <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
-                  class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition" %>
+    <p class="text-gray-600 mb-8">You are now viewing your dashboard.</p>
+
+    <div class="space-x-4">
+      <%= link_to "View My Profile", profile_path,
+                  class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition" %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete,
+                    class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition" %>
+    </div>
   </div>
 </div>
