@@ -1,50 +1,63 @@
-<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 mt-10">
+<%# Edit Profile Form with Fixed Avatar Upload %>
+<% input_class = "w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+
+<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 mt-10" data-controller="location">
   <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Edit Profile</h2>
 
-  <%= form_with model: @profile, url: profile_path, local: true, html: { multipart: true, class: "space-y-6" } do |f| %>
+  <%= form_with model: @profile, url: profile_path,
+                local: true,
+                html: {
+                  multipart: true,
+                  class: "space-y-6",
+                  data: { turbo: false }
+                } do |f| %>
     <div class="flex flex-col items-center">
-      <div class="relative mb-4">
+      <!-- Avatar Upload Section -->
+      <div class="relative mb-4 group">
         <% if @profile.avatar.attached? %>
-          <%= image_tag @profile.avatar,
-                        class: "rounded-full h-32 w-32 object-cover border-4 border-white shadow-lg",
-                        id: "avatar-preview" %>
+          <%= image_tag @profile.avatar, class: "rounded-full h-32 w-32 object-cover border-4 border-white shadow-lg transition-opacity group-hover:opacity-75", id: "avatar-preview" %>
         <% else %>
-          <div class="rounded-full h-32 w-32 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center border-4 border-white shadow-lg">
+          <div class="rounded-full h-32 w-32 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center border-4 border-white shadow-lg transition-opacity group-hover:opacity-75">
             <span class="text-gray-500 text-sm">Add Photo</span>
           </div>
         <% end %>
-        <label for="profile_avatar" class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 cursor-pointer shadow-md hover:bg-blue-600 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+
+        <label for="profile_avatar" class="absolute inset-0 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+          <div class="bg-black bg-opacity-50 rounded-full p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
         </label>
-        <%= f.file_field :avatar, class: "hidden", id: "profile_avatar", accept: "image/*" %>
+
+        <%= f.file_field :avatar, class: "hidden", id: "profile_avatar", accept: "image/png, image/jpeg, image/jpg", direct_upload: true %>
       </div>
+
       <!-- Input Fields -->
       <div class="w-full space-y-4">
         <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :first_name, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+        <%= f.text_field :first_name, class: input_class %>
 
         <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :last_name, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+        <%= f.text_field :last_name, class: input_class %>
 
         <%= f.select :country, [], { include_blank: 'Select country', selected: @profile.country },
-                     class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                     class: "#{input_class}",
                      data: {
                        location_target: "countrySelect",
                        selected: @profile.country
                      } %>
 
         <%= f.select :city, [], { include_blank: 'Select city', selected: @profile.city },
-                     class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                     class: "#{input_class}",
                      data: {
                        location_target: "citySelect",
                        selected: @profile.city
                      } %>
 
         <%= f.label :bio, class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_area :bio, rows: 3, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+        <%= f.text_area :bio, rows: 3, class: "#{input_class}" %>
       </div>
     </div>
 
