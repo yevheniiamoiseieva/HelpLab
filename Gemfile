@@ -59,3 +59,6 @@ gem 'devise'
 gem 'active_storage_validations'
 gem "mini_magick"
 gem "image_processing", "~> 1.2"
+gem 'letter_opener', group: :development
+gem 'letter_opener_web'
+gem 'countries'

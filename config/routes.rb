@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   get 'dashboard', to: 'home#dashboard', as: :dashboard
 
   resource :profile, only: [:show, :edit, :update]
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
 
   get "service-worker" => "rails/pwa#service_worker"
   get "manifest" => "rails/pwa#manifest"
