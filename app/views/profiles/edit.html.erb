@@ -21,68 +21,79 @@
         </label>
         <%= f.file_field :avatar, class: "hidden", id: "profile_avatar", accept: "image/*" %>
       </div>
-
+      <!-- Input Fields -->
       <div class="w-full space-y-4">
-        <div>
-          <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= f.text_field :first_name, class: "w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
+        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :first_name, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
 
-        <div>
-          <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= f.text_field :last_name, class: "w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
+        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_field :last_name, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
 
-        <div>
-          <%= f.label :location, class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= f.text_field :location, class: "w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
+        <%= f.select :country, [], { include_blank: 'Select country', selected: @profile.country },
+                     class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                     data: {
+                       location_target: "countrySelect",
+                       selected: @profile.country
+                     } %>
 
-        <div>
-          <%= f.label :bio, class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= f.text_area :bio, rows: 3, class: "w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
+        <%= f.select :city, [], { include_blank: 'Select city', selected: @profile.city },
+                     class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+                     data: {
+                       location_target: "citySelect",
+                       selected: @profile.city
+                     } %>
+
+        <%= f.label :bio, class: "block text-sm font-medium text-gray-700" %>
+        <%= f.text_area :bio, rows: 3, class: "form-input block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
       </div>
     </div>
 
+    <!-- Form Actions -->
     <div class="flex justify-between pt-6">
-      <%= link_to "Cancel", profile_path, class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition" %>
-      <%= f.submit "Save Changes", class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer" %>
+      <%= link_to "Cancel", profile_path,
+                  class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition" %>
+      <%= f.submit "Save Changes",
+                   class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer",
+                   data: { disable_with: "Saving..." } %>
     </div>
   <% end %>
 </div>
 
 <script>
-    document.addEventListener('turbo:load', function() {
+    document.addEventListener('turbo:load', setupAvatarPreview);
+    document.addEventListener('turbo:render', setupAvatarPreview);
+
+    function setupAvatarPreview() {
         const avatarInput = document.getElementById('profile_avatar');
         const avatarPreview = document.getElementById('avatar-preview');
 
-        if (avatarInput) {
+        if (avatarInput && !avatarInput._listenerAttached) {
             avatarInput.addEventListener('change', function(event) {
                 const file = event.target.files[0];
-                if (file) {
+                if (file && file.type.match('image.*')) {
                     const reader = new FileReader();
+
                     reader.onload = function(e) {
                         if (avatarPreview) {
                             avatarPreview.src = e.target.result;
                         } else {
                             const previewContainer = document.querySelector('.relative.mb-4');
-                            previewContainer.innerHTML = `
-                <img src="${e.target.result}"
-                     class="rounded-full h-32 w-32 object-cover border-4 border-white shadow-lg"
-                     id="avatar-preview">
-                <label for="profile_avatar" class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 cursor-pointer shadow-md hover:bg-blue-600 transition">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </label>
-              `;
+                            if (previewContainer) {
+                                const newAvatar = document.createElement('img');
+                                newAvatar.src = e.target.result;
+                                newAvatar.classList.add("rounded-full", "h-32", "w-32", "object-cover", "border-4", "border-white", "shadow-lg");
+                                newAvatar.id = "avatar-preview";
+                                previewContainer.innerHTML = '';
+                                previewContainer.appendChild(newAvatar);
+                            }
                         }
                     };
+
                     reader.readAsDataURL(file);
                 }
             });
+
+            avatarInput._listenerAttached = true;
         }
-    });
+    }
 </script>
