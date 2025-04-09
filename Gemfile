@@ -62,3 +62,4 @@ gem "image_processing", "~> 1.2"
 gem 'letter_opener', group: :development
 gem 'letter_opener_web'
 gem 'countries'
+gem 'mapbox-gl-rails'

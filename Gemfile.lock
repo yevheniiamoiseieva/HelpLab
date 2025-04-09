@@ -119,6 +119,8 @@ GEM
       warden (~> 1.2.3)
     drb (2.2.1)
     erubi (1.13.1)
+    ffi (1.17.1-aarch64-linux-gnu)
+    ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x64-mingw-ucrt)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -162,6 +164,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mapbox-gl-rails (3.7.0)
+      railties (>= 3.2)
     marcel (1.0.4)
     matrix (0.4.2)
     mini_magick (5.2.0)
@@ -180,6 +184,10 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
+    nokogiri (1.18.7-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.7-arm64-darwin)
+      racc (~> 1.4)
     nokogiri (1.18.7-x64-mingw-ucrt)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -187,6 +195,7 @@ GEM
     parser (3.3.7.4)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     pg (1.5.9-x64-mingw-ucrt)
     pp (0.6.2)
       prettyprint
@@ -328,6 +337,8 @@ GEM
     zeitwerk (2.7.2)
 
 PLATFORMS
+  aarch64-linux
+  arm64-darwin-24
   x64-mingw-ucrt
 
 DEPENDENCIES
@@ -343,6 +354,7 @@ DEPENDENCIES
   jbuilder
   letter_opener
   letter_opener_web
+  mapbox-gl-rails
   mini_magick
   pg (~> 1.1)
   puma (>= 5.0)

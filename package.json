@@ -13,5 +13,9 @@
   "private": true,
   "devDependencies": {
     "@hotwired/stimulus": "^3.2.2"
+  },
+  "dependencies": {
+    "@rails/activestorage": "^8.0.200",
+    "mapbox-gl": "^3.11.0"
   }
 }

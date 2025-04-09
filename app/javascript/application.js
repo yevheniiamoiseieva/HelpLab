@@ -5,3 +5,5 @@ import { Application } from "@hotwired/stimulus"
 const application = Application.start()
 import LocationController from "./location_controller"
 application.register("location", LocationController)
+import "mapbox-gl"
+import "./map_controller"

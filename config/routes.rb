@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   # Дашборд
   get 'dashboard', to: 'home#dashboard', as: :dashboard
-
+  get '/about', to: 'feed#about', as: 'about'
   # Devise: регистрация, вход, подтверждение и пр.
   devise_for :users, controllers: {
     confirmations: 'users/confirmations',
