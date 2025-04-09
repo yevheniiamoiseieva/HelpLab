@@ -1,0 +1,21 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold">Запросы</h1>
+  <%= link_to '➕ Створити новий запит', new_request_path,
+              class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition' %>
+</div>
+
+<% if @requests.empty? %>
+  <p class="text-gray-600">Поки що немає жодного запиту.</p>
+<% else %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <% @requests.each do |request| %>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-semibold mb-2"><%= request.title %></h2>
+        <p><%= truncate(request.description, length: 100) %></p>
+        <p class="text-sm text-gray-500 mt-2">Категория: <%= request.category %></p>
+        <p class="text-sm text-gray-500">Локація: <%= request.location %></p>
+        <%= link_to 'Детальніше', request_path(request), class: 'text-blue-600 mt-2 inline-block' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

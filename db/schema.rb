@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_08_134655) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_09_100722) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,29 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_08_134655) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "sender_id"
+    t.bigint "receiver_id"
+    t.text "body"
+    t.bigint "request_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_messages_on_receiver_id"
+    t.index ["request_id"], name: "index_messages_on_request_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "message"
+    t.boolean "read", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "request_id"
+    t.index ["request_id"], name: "index_notifications_on_request_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "profiles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "first_name"
@@ -53,6 +76,39 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_08_134655) do
     t.string "country"
     t.string "city"
     t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.text "description"
+    t.string "category"
+    t.string "location"
+    t.string "status", default: "очікує волонтера"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_requests_on_user_id"
+  end
+
+  create_table "responses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "request_id", null: false
+    t.string "status", default: "принят"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_responses_on_request_id"
+    t.index ["user_id"], name: "index_responses_on_user_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "reviewer_id", null: false
+    t.bigint "reviewed_user_id", null: false
+    t.integer "rating", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reviewed_user_id"], name: "index_reviews_on_reviewed_user_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -67,6 +123,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_08_134655) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
+    t.string "role"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -74,5 +131,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_08_134655) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "messages", "requests"
+  add_foreign_key "messages", "users", column: "receiver_id"
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "notifications", "requests"
+  add_foreign_key "notifications", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "requests", "users"
+  add_foreign_key "responses", "requests"
+  add_foreign_key "responses", "users"
+  add_foreign_key "reviews", "users", column: "reviewed_user_id"
+  add_foreign_key "reviews", "users", column: "reviewer_id"
 end

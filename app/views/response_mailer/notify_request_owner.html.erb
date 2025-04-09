@@ -1,0 +1,4 @@
+
+<p>Привіт!</p>
+<p><%= @response.user.profile.first_name %> відгукнувся на ваш запит "<%= @response.request.title %>".</p>
+<p><%= link_to 'Переглянути запит', request_url(@response.request) %></p>

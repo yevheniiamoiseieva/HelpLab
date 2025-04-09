@@ -1,0 +1,23 @@
+<h1 class="text-2xl font-bold mb-4">Ваші сповіщення</h1>
+
+<% if @notifications.any? %>
+  <ul class="space-y-4">
+    <% @notifications.each do |notification| %>
+      <li>
+        <% if notification.request.present? %>
+          <%= link_to request_path(notification.request), class: "block bg-white p-4 rounded shadow hover:bg-blue-50 transition" do %>
+            <p><%= notification.message %></p>
+            <p class="text-sm text-gray-500 mt-1"><%= notification.created_at.strftime("%d.%m.%Y %H:%M") %></p>
+          <% end %>
+        <% else %>
+          <div class="block bg-white p-4 rounded shadow text-gray-400 italic">
+            <p><%= notification.message %></p>
+            <p class="text-sm text-gray-400 mt-1"><%= notification.created_at.strftime("%d.%m.%Y %H:%M") %></p>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-gray-500">У вас немає нових сповіщень.</p>
+<% end %>

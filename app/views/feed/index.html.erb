@@ -1,0 +1,49 @@
+<% if current_user&.role == "volunteer" %>
+  <h1 class="text-2xl font-bold mb-6">Лента запитів</h1>
+
+  <div class="mb-4">
+    <%= form_with url: root_path, method: :get, local: true do %>
+      <div class="flex gap-2 items-center">
+        <label class="text-gray-700">Фільтр:</label>
+        <%= select_tag :role, options_for_select([['Всі', ''], ['Потребую допомоги', 'потребую допомоги'], ['Волонтер', 'волонтер']], selected: @role_filter), class: "p-2 border rounded" %>
+        <%= submit_tag 'Застосувати', class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6">
+    <% @requests.each do |request| %>
+      <div class="bg-white shadow rounded-lg p-4">
+        <div class="text-sm text-gray-500 mb-1">
+          <%= request.user.profile.first_name %>
+          <% if request.user.role.present? %>
+            — <%= request.user.role %>
+          <% end %>
+        </div>
+        <h2 class="text-xl font-semibold"><%= request.title %></h2>
+        <p class="text-gray-700 mt-2"><%= request.description %></p>
+        <p class="text-sm text-gray-500 mt-1">Категорія: <%= request.category %> • <%= request.location %></p>
+        <%= link_to 'Детальніше', request_path(request), class: 'text-blue-600 mt-2 inline-block' %>
+      </div>
+    <% end %>
+  </div>
+
+<% else %>
+  <% if @contacts.present? %>
+    <h1 class="text-2xl font-bold mb-4">Корисні контакти</h1>
+    <ul class="list-disc list-inside text-blue-600 mb-6">
+      <% @contacts.each do |link| %>
+        <li><a href="<%= link %>" target="_blank" class="underline"><%= link %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @news.present? %>
+    <h2 class="text-xl font-semibold mb-2">Новини для ВПО</h2>
+    <ul class="list-disc list-inside text-gray-800">
+      <% @news.each do |item| %>
+        <li><%= item %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

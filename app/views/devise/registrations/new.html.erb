@@ -27,6 +27,11 @@
     </div>
 
     <div class="actions">
+      <div class="mb-4">
+        <%= f.label :role, "Я —", class: "block font-medium" %>
+        <%= f.select :role, User::ROLES, {}, class: "w-full mt-1 p-2 border rounded" %>
+      </div>
+
       <%= f.submit "Sign up",
                    class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer" %>
     </div>

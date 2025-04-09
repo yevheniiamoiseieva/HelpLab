@@ -1,0 +1,52 @@
+<!-- Основний блок чату -->
+<div class="bg-gradient-to-b from-blue-50 to-white py-6 min-h-screen flex justify-center">
+  <div class="w-full max-w-xl bg-white rounded shadow p-4">
+
+    <!-- Заголовок -->
+    <h1 class="text-xl font-bold mb-4">Чат по запиту: <%= @request.title %></h1>
+
+    <!-- Шапка співрозмовника -->
+    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4 mb-6 border border-gray-200">
+      <% chat_partner = current_user == @request.user ? @request.responses.first&.user : @request.user %>
+      <% if chat_partner %>
+        <%= image_tag(chat_partner.profile.avatar.attached? ? url_for(chat_partner.profile.avatar) : "default-avatar.png",
+                      class: "w-12 h-12 rounded-full object-cover") %>
+
+        <div>
+          <%= link_to(chat_partner.profile.full_name.presence || chat_partner.email,
+                      public_profile_path(chat_partner),
+                      class: "text-blue-600 font-semibold hover:underline text-lg") %>
+          <p class="text-sm text-gray-500"><%= chat_partner.profile.city %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Повідомлення -->
+    <div class="space-y-4 max-h-[400px] overflow-y-auto mb-4">
+      <% @messages.each do |msg| %>
+        <div class="<%= msg.sender == current_user ? 'text-right' : 'text-left' %>">
+          <p class="text-sm font-semibold text-blue-600">
+            <%= link_to msg.sender.profile.full_name.presence || msg.sender.email,
+                        public_profile_path(msg.sender),
+                        class: "hover:underline" %>
+          </p>
+          <div class="inline-block <%= msg.sender == current_user ? 'bg-blue-100' : 'bg-gray-100' %> text-gray-800 p-2 rounded max-w-[80%] break-words">
+            <%= msg.body %>
+          </div>
+          <div class="text-xs text-gray-400 mt-1">
+            <%= msg.created_at.strftime("%d.%m.%Y %H:%M") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Форма надсилання -->
+    <%= form_with model: [@request, @new_message], local: true do |f| %>
+      <div class="flex gap-2">
+        <%= f.text_area :body, rows: 2, placeholder: "Напишіть повідомлення...", class: "w-full p-2 rounded border" %>
+        <%= f.submit "Надіслати", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

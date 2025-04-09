@@ -1,4 +1,3 @@
-# app/models/profile.rb
 class Profile < ApplicationRecord
   belongs_to :user
   has_one_attached :avatar do |attachable|
@@ -7,6 +6,11 @@ class Profile < ApplicationRecord
 
   validates :first_name, presence: true
   validate :validate_avatar
+
+  # 👤 Полное имя для отображения в чате и профиле
+  def full_name
+    [first_name, last_name].compact.join(" ")
+  end
 
   private
 
