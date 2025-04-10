@@ -3,12 +3,13 @@
 <p><strong>Категорія:</strong> <%= @request.category %></p>
 <p><strong>Місцезнаходження:</strong> <%= @request.location %></p>
 
-<% if current_user.role == "волонтер" && @request.status != "завершено" %>
+<% if (current_user.role == "волонтер" || current_user == @request.user) && @request.status != "Завершено" %>
   <%= button_to "✅ Завершити запит",
                 complete_request_path(@request),
                 method: :patch,
                 class: "mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
 <% end %>
+
 
 <p class="mt-2">
   <strong>Статус:</strong>
@@ -34,5 +35,6 @@
   <%= button_to 'Відгукнутися', request_responses_path(@request), method: :post,
                 class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4' %>
 <% end %>
+
 
 <%= link_to 'Назад', requests_path, class: 'text-blue-600 underline mt-4 inline-block' %>

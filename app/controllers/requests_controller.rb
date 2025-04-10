@@ -37,13 +37,14 @@ class RequestsController < ApplicationController
   end
 
   def complete
-    if current_user.role == "волонтер"
+    if current_user == @request.user || current_user.role == "волонтер"
       @request.update(status: "завершено")
       redirect_to @request, notice: "Запит позначено як завершений"
     else
       redirect_to @request, alert: "У вас немає прав завершувати цей запит."
     end
   end
+
 
   private
 

@@ -1,29 +1,18 @@
-
-
 class FeedController < ApplicationController
   before_action :authenticate_user!, except: [:index, :about]
 
   def index
-    if current_user
-      if current_user.volunteer?
-        @requests = RequestsQuery.new(Request.where.not(user_id: current_user.id))
-                                 .call(filter_params)
-                                 .includes(:user, :responses)
-      else
-        @user_requests = RequestsQuery.new(current_user.requests)
-                                      .call(filter_params)
-                                      .includes(:responses, :messages)
+    return unless current_user
 
-        @completed_requests = current_user.requests
-                                          .recently_completed
-                                          .includes(responses: :user)
-                                          .where.not(responses: { id: nil })
-                                          .distinct
-      end
-
-      load_volunteers_for_map
+    if current_user.volunteer?
+      load_volunteer_requests
+    else
+      load_user_requests
     end
 
+    load_volunteers_for_map
+
+    # Дополнительная информация, доступная на главной странице
     @contacts = ["https://dopomoga.gov.ua", "https://pryhulky.com", "https://help.gov.ua"]
     @news = [
       "З 1 травня змінилась адресна допомога ВПО",
@@ -51,29 +40,55 @@ class FeedController < ApplicationController
   end
 
   private
+
+  # Фильтры для запроса
   def filter_params
     params.permit(:category, :status, :location, :search, :sort)
   end
 
+  # Логика для загрузки запросов волонтера
+  def load_volunteer_requests
+    @requests = RequestsQuery.new(Request.where.not(user_id: current_user.id))
+                             .call(filter_params)
+                             .includes(:user, :responses)
+  end
+
+  # Логика для загрузки запросов обычного пользователя
+  def load_user_requests
+    @user_requests = RequestsQuery.new(current_user.requests)
+                                  .call(filter_params)
+                                  .includes(:responses, :messages)
+
+    @completed_requests = current_user.requests
+                                      .recently_completed
+                                      .includes(responses: :user)
+                                      .where.not(responses: { id: nil })
+                                      .distinct
+  end
+
+  # Загрузка волонтеров для отображения на карте
   def load_volunteers_for_map
     return unless current_user.profile&.city.present?
 
     @volunteers = User.volunteers
                       .joins(:profile)
-                      .where.not(profiles: { city: nil })
                       .where(profiles: { city: current_user.profile.city })
                       .select('users.*, profiles.first_name, profiles.city, profiles.country')
                       .limit(50)
-                      .map do |u|
-      {
-        id: u.id,
-        name: u.profile.first_name,
-        city: u.profile.city,
-        country: u.profile.country,
-        avatar_url: u.profile.avatar.attached? ? url_for(u.profile.avatar) : nil
-      }
-    end
+                      .map { |user| map_volunteer(user) }
 
-    Rails.logger.debug "Volunteers for map: #{@volunteers.inspect}"
+    # Если необходимо оставить логирование, можно ограничить его уровнем логирования для разработки
+    Rails.logger.debug "Volunteers for map: #{@volunteers.inspect}" if Rails.env.development?
+  end
+
+  # Преобразование данных волонтера для карты
+  def map_volunteer(user)
+    {
+      id: user.id,
+      name: user.profile.first_name,
+      city: user.profile.city,
+      country: user.profile.country,
+      avatar_url: user.profile.avatar.attached? ? url_for(user.profile.avatar) : nil
+    }
   end
 end

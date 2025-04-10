@@ -5,46 +5,55 @@
     <!-- Заголовок -->
     <h1 class="text-xl font-bold mb-4">Чат по запиту: <%= @request.title %></h1>
 
-    <!-- Шапка співрозмовника -->
-    <div class="bg-white p-4 rounded-lg shadow flex items-center gap-4 mb-6 border border-gray-200">
-      <% chat_partner = current_user == @request.user ? @request.responses.first&.user : @request.user %>
-      <% if chat_partner %>
-        <%= image_tag(chat_partner.profile.avatar.attached? ? url_for(chat_partner.profile.avatar) : "default-avatar.png",
-                      class: "w-12 h-12 rounded-full object-cover") %>
-
-        <div>
-          <%= link_to(chat_partner.profile.full_name.presence || chat_partner.email,
-                      public_profile_path(chat_partner),
-                      class: "text-blue-600 font-semibold hover:underline text-lg") %>
-          <p class="text-sm text-gray-500"><%= chat_partner.profile.city %></p>
-        </div>
-      <% end %>
-    </div>
+    <!-- Список чатів (тільки для автора запиту) -->
+    <% if current_user == @request.user %>
+      <div class="mb-4">
+        <h2 class="font-semibold text-lg">Чати з волонтерами:</h2>
+        <ul>
+          <% @request.responses.each do |response| %>
+            <% partner = response.user %>
+            <li class="mb-2">
+              <%= link_to "Чат з #{partner.profile.full_name.presence || partner.email}",
+                          request_messages_path(@request, partner_id: partner.id),
+                          class: "text-blue-600 hover:underline" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
     <!-- Повідомлення -->
-    <div class="space-y-4 max-h-[400px] overflow-y-auto mb-4">
-      <% @messages.each do |msg| %>
-        <div class="<%= msg.sender == current_user ? 'text-right' : 'text-left' %>">
-          <p class="text-sm font-semibold text-blue-600">
-            <%= link_to msg.sender.profile.full_name.presence || msg.sender.email,
-                        public_profile_path(msg.sender),
-                        class: "hover:underline" %>
-          </p>
-          <div class="inline-block <%= msg.sender == current_user ? 'bg-blue-100' : 'bg-gray-100' %> text-gray-800 p-2 rounded max-w-[80%] break-words">
-            <%= msg.body %>
+    <% if @companion.present? %>
+      <div class="space-y-4 max-h-[400px] overflow-y-auto mb-4">
+        <% @messages.each do |msg| %>
+          <div class="<%= msg.sender == current_user ? 'text-right' : 'text-left' %>">
+            <p class="text-sm font-semibold text-blue-600">
+              <%= link_to msg.sender.profile.full_name.presence || msg.sender.email,
+                          public_profile_path(msg.sender),
+                          class: "hover:underline" %>
+            </p>
+            <div class="inline-block <%= msg.sender == current_user ? 'bg-blue-100' : 'bg-gray-100' %> text-gray-800 p-2 rounded max-w-[80%] break-words">
+              <%= msg.body %>
+            </div>
+            <div class="text-xs text-gray-400 mt-1">
+              <%= msg.created_at.strftime("%d.%m.%Y %H:%M") %>
+            </div>
           </div>
-          <div class="text-xs text-gray-400 mt-1">
-            <%= msg.created_at.strftime("%d.%m.%Y %H:%M") %>
-          </div>
+        <% end %>
+      </div>
+
+      <!-- Форма надсилання -->
+      <%= form_with model: [@request, @new_message], local: true do |f| %>
+        <%= hidden_field_tag :partner_id, @companion.id %>
+        <div class="flex gap-2">
+          <%= f.text_area :body, rows: 2, placeholder: "Напишіть повідомлення...", class: "w-full p-2 rounded border" %>
+          <%= f.submit "Надіслати", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
         </div>
       <% end %>
-    </div>
 
-    <!-- Форма надсилання -->
-    <%= form_with model: [@request, @new_message], local: true do |f| %>
-      <div class="flex gap-2">
-        <%= f.text_area :body, rows: 2, placeholder: "Напишіть повідомлення...", class: "w-full p-2 rounded border" %>
-        <%= f.submit "Надіслати", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+    <% else %>
+      <div class="text-gray-500 italic text-center py-12">
+        Виберіть чат, щоб переглянути повідомлення.
       </div>
     <% end %>
 

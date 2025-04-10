@@ -149,6 +149,8 @@
     <orderEntry type="library" scope="PROVIDED" name="websocket-extensions (v0.1.5, ruby-3.3.6-p108) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="xpath (v3.2.0, ruby-3.3.6-p108) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.7.2, ruby-3.3.6-p108) [gem]" level="application" />
+    <orderEntry type="library" name="mapbox-gl" level="application" />
+    <orderEntry type="library" name="swiper" level="application" />
   </component>
   <component name="RModuleSettingsStorage">
     <LOAD_PATH number="0" />

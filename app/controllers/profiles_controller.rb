@@ -8,6 +8,8 @@ class ProfilesController < ApplicationController
   def show
   end
 
+
+
   # 🧑‍💻 Публічний перегляд іншого користувача (для чату)
   def public_show
     render :show

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_09_100722) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_10_103026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,8 +49,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_09_100722) do
     t.bigint "request_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "response_id"
     t.index ["receiver_id"], name: "index_messages_on_receiver_id"
     t.index ["request_id"], name: "index_messages_on_request_id"
+    t.index ["response_id"], name: "index_messages_on_response_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
@@ -107,6 +109,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_09_100722) do
     t.text "comment", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "reviewer_id"
     t.index ["author_id", "reviewed_user_id"], name: "index_reviews_on_author_id_and_reviewed_user_id", unique: true
     t.index ["author_id"], name: "index_reviews_on_author_id"
     t.index ["reviewed_user_id"], name: "index_reviews_on_reviewed_user_id"
@@ -133,6 +136,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_09_100722) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "messages", "requests"
+  add_foreign_key "messages", "responses"
   add_foreign_key "messages", "users", column: "receiver_id"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "notifications", "requests"

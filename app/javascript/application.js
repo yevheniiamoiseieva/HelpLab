@@ -1,9 +1,14 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
 import { Application } from "@hotwired/stimulus"
+import HelloController from "./controllers/hello_controller"
+import LocationController from "./controllers/location_controller"
+
+
+
 const application = Application.start()
-import LocationController from "./location_controller"
+application.register("hello", HelloController)
 application.register("location", LocationController)
-import "mapbox-gl"
-import "./map_controller"
+
+application.debug = false
+window.Stimulus = application
+
+export { application }

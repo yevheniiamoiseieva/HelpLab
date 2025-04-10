@@ -259,7 +259,7 @@
         </div>
       </div>
 
-      <!-- Help map -->
+      <!-- Help near you -->
       <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8 animate-fade-in-up">
         <div class="p-6 border-b border-gray-100">
           <h2 class="text-xl font-semibold flex items-center">
@@ -268,26 +268,71 @@
           </h2>
         </div>
         <div class="p-6">
-          <% if @volunteers&.any? %>
-            <div data-controller="map"
-                 data-map-mapbox-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>"
-                 data-map-volunteers-value="<%= @volunteers.to_json %>"
-                 class="h-96 bg-gray-100 rounded-lg">
+          <% if @volunteers.any? %>
+            <div class="swiper-container h-64 bg-gray-100 rounded-lg"> <!-- Изменил h-96 на h-64 -->
+              <div class="swiper-wrapper">
+                <% @volunteers.each do |volunteer| %>
+                  <div class="swiper-slide">
+                    <div class="bg-white rounded-lg shadow-lg p-4 text-center h-full flex flex-col"> <!-- Добавил h-full и flex -->
+                      <% avatar_url = volunteer[:avatar_url].presence || 'default-avatar.png' %>
+                      <img src="<%= avatar_url %>" alt="<%= volunteer[:name] %>"
+                           class="w-16 h-16 rounded-full mx-auto mb-2"> <!-- Уменьшил размер аватарки -->
+                      <h3 class="text-md font-semibold"><%= volunteer[:name] %></h3> <!-- Уменьшил текст -->
+                      <p class="text-sm text-gray-500 mb-2"><%= volunteer[:city] %></p> <!-- Уменьшил текст -->
+                      <a href="<%= public_profile_path(volunteer[:id]) %>"
+                         class="mt-auto px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm">
+                        View Profile
+                      </a> <!-- Уменьшил кнопку -->
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
             </div>
           <% else %>
-            <div class="h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+            <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center"> <!-- Изменил h-96 на h-64 -->
               <div class="text-center">
-                <i data-lucide="map-pin" class="w-12 h-12 text-indigo-400 mx-auto mb-4"></i>
-                <h3 class="text-lg font-medium text-gray-900">Available Help Map</h3>
-                <p class="text-gray-600 mt-2">Currently no volunteers in your city</p>
-                <button class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-                  Update location
-                </button>
+                <i data-lucide="map-pin" class="w-8 h-8 text-indigo-400 mx-auto mb-2"></i> <!-- Уменьшил иконку -->
+                <h3 class="text-md font-medium text-gray-900">No volunteers in your city</h3>
+                <p class="text-sm text-gray-600 mt-1">Currently no volunteers available near you</p>
               </div>
             </div>
           <% end %>
         </div>
       </div>
+
+      <script>
+          // Инициализация Swiper после загрузки контента
+          document.addEventListener('DOMContentLoaded', function() {
+              var swiper = new Swiper('.swiper-container', {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                  navigation: {
+                      nextEl: '.swiper-button-next',
+                      prevEl: '.swiper-button-prev'
+                  },
+                  breakpoints: {
+                      640: {
+                          slidesPerView: 2,
+                          spaceBetween: 20
+                      },
+                      768: {
+                          slidesPerView: 3,
+                          spaceBetween: 30
+                      },
+                      1024: {
+                          slidesPerView: 4,
+                          spaceBetween: 40
+                      }
+                  }
+              });
+
+              // Обновление Swiper после динамической загрузки контента
+              swiper.update();
+          });
+      </script>
+
 
       <!-- Active requests -->
       <div class="mb-8">
@@ -345,7 +390,7 @@
         <% end %>
       </div>
 
-      <!-- Help history -->
+
       <div class="mb-8">
         <h2 class="text-xl font-semibold mb-4">Received help</h2>
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
@@ -392,7 +437,7 @@
   </div>
 
 <% else %>
-  <!-- Unregistered User Interface -->
+
   <div class="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
@@ -412,7 +457,7 @@
         </p>
       </div>
 
-      <!-- Main sections -->
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         <!-- Block for those in need -->
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/10 animate-fade-in-up">
@@ -445,7 +490,7 @@
           </div>
         </div>
 
-        <!-- Block for volunteers -->
+
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/10 animate-fade-in-up animation-delay-100">
           <div class="flex items-center mb-6">
             <div class="bg-purple-500/20 p-3 rounded-lg mr-4">
@@ -473,7 +518,7 @@
         </div>
       </div>
 
-      <!-- Success stories -->
+
       <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl mb-12 animate-fade-in-up animation-delay-200">
         <h2 class="text-2xl font-bold text-white mb-8 text-center">Real Help Stories</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -503,7 +548,6 @@
         </div>
       </div>
 
-      <!-- Emergency contacts -->
       <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-xl animate-fade-in-up animation-delay-300">
         <h2 class="text-2xl font-bold text-white mb-6 flex items-center justify-center">
           <i data-lucide="phone-call" class="w-6 h-6 mr-3 text-blue-300"></i>
@@ -531,7 +575,6 @@
   </div>
 <% end %>
 
-<!-- Animation styles -->
 <style>
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -590,7 +633,6 @@
     }
 </style>
 
-<!-- JS for dynamic effects -->
 <script>
     // Initialize icons
     document.addEventListener('DOMContentLoaded', function() {
