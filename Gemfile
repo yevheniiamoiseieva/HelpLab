@@ -63,7 +63,10 @@ gem 'letter_opener', group: :development
 gem 'letter_opener_web'
 gem 'countries'
 gem 'mapbox-gl-rails'
+
+# prometheus dependencies
 gem 'prometheus-client'
 gem 'webrick'
 gem 'yabeda-prometheus'
 gem "yabeda-rails", "~> 0.9.0"
+gem 'yabeda-puma-plugin'
