@@ -29,5 +29,13 @@ services:
       db:
         condition: service_healthy
 
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=password
+
 volumes:
   postgres_data:
