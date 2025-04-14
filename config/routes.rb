@@ -34,7 +34,8 @@ Rails.application.routes.draw do
     resources :messages, only: [:index, :create]
 
     member do
-      patch :complete  # Завершення запиту
+      patch :complete
+      patch :revert
     end
   end
 

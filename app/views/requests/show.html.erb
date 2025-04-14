@@ -3,13 +3,19 @@
 <p><strong>Категорія:</strong> <%= @request.category %></p>
 <p><strong>Місцезнаходження:</strong> <%= @request.location %></p>
 
-<% if (current_user.role == "волонтер" || current_user == @request.user) && @request.status != "Завершено" %>
+<%# Show "Complete Request" button only if user is a volunteer or the author, and the request is not completed %>
+<% if (current_user.role == "волонтер" || current_user == @request.user) && @request.status != "завершено" %>
   <%= button_to "✅ Завершити запит",
                 complete_request_path(@request),
                 method: :patch,
                 class: "mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
 <% end %>
 
+<%# Show "Edit Request" button only for the request author %>
+<% if current_user == @request.user %>
+  <%= link_to "✏️ Змінити запит", edit_request_path(@request),
+              class: "inline-block mt-4 bg-gray-100 border border-gray-400 text-gray-800 px-4 py-2 rounded hover:bg-gray-200" %>
+<% end %>
 
 <p class="mt-2">
   <strong>Статус:</strong>
@@ -24,17 +30,16 @@
   </span>
 </p>
 
-<%# 💬 Кнопка чату — для автора запиту и волонтера, который откликнулся %>
+<%#Chat button — visible to request author and the volunteer who responded %>
 <% if current_user == @request.user || @request.responses.exists?(user_id: current_user.id) %>
   <%= link_to "💬 Перейти до чату", request_messages_path(@request),
               class: "inline-block mt-4 bg-white border border-blue-500 text-blue-600 px-4 py-2 rounded hover:bg-blue-50 transition" %>
 <% end %>
 
-<%# 👤 Кнопка отклика — только для волонтёров, которые ещё не откликнулись %>
+<%# Response button — only for volunteers who haven't responded yet %>
 <% if user_signed_in? && current_user != @request.user && !@request.responses.exists?(user_id: current_user.id) %>
   <%= button_to 'Відгукнутися', request_responses_path(@request), method: :post,
                 class: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4' %>
 <% end %>
-
 
 <%= link_to 'Назад', requests_path, class: 'text-blue-600 underline mt-4 inline-block' %>

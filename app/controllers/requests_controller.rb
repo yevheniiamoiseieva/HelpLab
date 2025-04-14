@@ -1,6 +1,6 @@
 class RequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_request, only: %i[show edit update destroy complete]
+  before_action :set_request, only: %i[show edit update destroy complete revert]
 
   def index
     @requests = current_user.requests.order(created_at: :desc)
@@ -13,13 +13,16 @@ class RequestsController < ApplicationController
   end
 
   def create
-    @request = current_user.requests.build(request_params)
+    @request = current_user.requests.build(request_params.except(:status))
+    @request.status = "потрібна допомога"
+
     if @request.save
       redirect_to @request, notice: 'Запит створено.'
     else
       render :new
     end
   end
+
 
   def edit; end
 
@@ -42,6 +45,14 @@ class RequestsController < ApplicationController
       redirect_to @request, notice: "Запит позначено як завершений"
     else
       redirect_to @request, alert: "У вас немає прав завершувати цей запит."
+    end
+  end
+  def revert
+    if current_user == @request.user || current_user.role == "волонтер"
+      @request.update(status: "потрібна допомога")
+      redirect_to @request, notice: "Статус повернуто на 'потрібна допомога'"
+    else
+      redirect_to @request, alert: "У вас немає прав змінювати статус цього запиту."
     end
   end
 

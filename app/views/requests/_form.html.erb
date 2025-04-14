@@ -19,10 +19,12 @@
     <%= f.text_field :location, class: "w-full mt-1 p-2 border rounded" %>
   </div>
 
-  <div class="mb-4">
-    <%= f.label :status, "Статус", class: "block font-medium" %>
-    <%= f.select :status, Request::STATUSES, {}, class: "w-full mt-1 p-2 border rounded" %>
-  </div>
+  <% if f.object.persisted? %>
+    <div class="mb-4">
+      <%= f.label :status, "Статус", class: "block font-medium" %>
+      <%= f.select :status, Request::STATUSES, {}, class: "w-full mt-1 p-2 border rounded" %>
+    </div>
+  <% end %>
 
   <%= f.submit "Зберегти", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
 <% end %>
