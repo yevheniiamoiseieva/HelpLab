@@ -59,11 +59,11 @@ class FeedController < ApplicationController
                                   .call(filter_params)
                                   .includes(:responses, :messages)
 
+    # Все завершенные запросы пользователя, отсортированные по дате обновления
     @completed_requests = current_user.requests
-                                      .recently_completed
+                                      .where(status: 'Завершено')
+                                      .order(updated_at: :desc)
                                       .includes(responses: :user)
-                                      .where.not(responses: { id: nil })
-                                      .distinct
   end
 
   # Загрузка волонтеров для отображения на карте

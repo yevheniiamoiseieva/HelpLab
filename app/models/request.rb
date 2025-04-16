@@ -18,4 +18,7 @@ class Request < ApplicationRecord
   def responses_count
     responses.count
   end
+  def completed?
+    status == "Завершено" || status == "завершено"
+  end
 end

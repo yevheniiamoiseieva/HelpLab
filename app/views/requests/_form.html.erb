@@ -19,10 +19,10 @@
     <%= f.text_field :location, class: "w-full mt-1 p-2 border rounded" %>
   </div>
 
-  <% if f.object.persisted? %>
+  <% if f.object.persisted? && !request.completed? %>
     <div class="mb-4">
       <%= f.label :status, "Статус", class: "block font-medium" %>
-      <%= f.select :status, Request::STATUSES, {}, class: "w-full mt-1 p-2 border rounded" %>
+      <%= f.select :status, Request::STATUSES.map { |s| [s, s] }, {}, class: "w-full mt-1 p-2 border rounded" %>
     </div>
   <% end %>
 

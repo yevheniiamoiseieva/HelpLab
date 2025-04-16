@@ -3,16 +3,16 @@
 <p><strong>Категорія:</strong> <%= @request.category %></p>
 <p><strong>Місцезнаходження:</strong> <%= @request.location %></p>
 
-<%# Show "Complete Request" button only if user is a volunteer or the author, and the request is not completed %>
-<% if (current_user.role == "волонтер" || current_user == @request.user) && @request.status != "завершено" %>
+<%# Кнопка "Завершити запит" %>
+<% if (current_user.role == "волонтер" || current_user == @request.user) && !@request.completed? %>
   <%= button_to "✅ Завершити запит",
                 complete_request_path(@request),
                 method: :patch,
                 class: "mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
 <% end %>
 
-<%# Show "Edit Request" button only for the request author %>
-<% if current_user == @request.user %>
+<%# Кнопка "Змінити запит" %>
+<% if current_user == @request.user && !@request.completed? %>
   <%= link_to "✏️ Змінити запит", edit_request_path(@request),
               class: "inline-block mt-4 bg-gray-100 border border-gray-400 text-gray-800 px-4 py-2 rounded hover:bg-gray-200" %>
 <% end %>
@@ -21,15 +21,14 @@
   <strong>Статус:</strong>
   <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold
     <%= case @request.status
-        when 'очікує волонтера' then 'bg-yellow-100 text-yellow-800'
-        when 'виконується' then 'bg-blue-100 text-blue-800'
-        when 'завершено' then 'bg-green-100 text-green-800'
+        when 'Потрібна допомога' then 'bg-yellow-100 text-yellow-800'
+        when 'У процесі' then 'bg-blue-100 text-blue-800'
+        when 'Завершено' then 'bg-green-100 text-green-800'
         else 'bg-gray-200 text-gray-800'
         end %>">
-    <%= @request.status.capitalize %>
+    <%= @request.status %>
   </span>
 </p>
-
 <%#Chat button — visible to request author and the volunteer who responded %>
 <% if current_user == @request.user || @request.responses.exists?(user_id: current_user.id) %>
   <%= link_to "💬 Перейти до чату", request_messages_path(@request),
