@@ -27,4 +27,14 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # def after_confirmation_path_for(resource_name, resource)
   #   super(resource_name, resource)
   # end
+  def show
+    self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+
+    if resource.errors.empty?
+      set_flash_message!(:notice, :confirmed)
+      redirect_to new_session_path(resource_name), notice: "Вашу пошту підтверджено. Будь ласка, увійдіть."
+    else
+      render :new
+    end
+  end
 end
