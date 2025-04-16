@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # Главная страница — лента запросов
   get "feed/index"
   root "feed#index"
+  post '/become_volunteer', to: 'feed#become_volunteer', as: :become_volunteer
 
   get 'dashboard', to: 'home#dashboard', as: :dashboard
   get '/about', to: 'feed#about', as: 'about'

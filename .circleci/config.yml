@@ -1,11 +1,15 @@
 version: 2.1
 
-jobs:
-  test:
+executors:
+  ruby-executor:
     docker:
-      - image: cimg/ruby:3.3.6  # Указываем точную версию
+      - image: cimg/ruby:3.3.6
         environment:
           BUNDLE_PATH: "vendor/bundle"
+
+jobs:
+  test:
+    executor: ruby-executor
     steps:
       - checkout
       - run: sudo apt-get update && sudo apt-get install -y build-essential
@@ -14,8 +18,7 @@ jobs:
       - run: bundle exec rspec
 
   lint:
-    docker:
-      - image: cimg/ruby:3.3.6  # Тоже указываем 3.3.6
+    executor: ruby-executor
     steps:
       - checkout
       - run: gem install rubocop
