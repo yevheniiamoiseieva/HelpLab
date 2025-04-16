@@ -1,7 +1,14 @@
 <h1 class="text-2xl font-bold mb-2"><%= @request.title %></h1>
 <p><%= @request.description %></p>
 <p><strong>Категорія:</strong> <%= @request.category %></p>
-<p><strong>Місцезнаходження:</strong> <%= @request.location %></p>
+<p><strong>Місцезнаходження:</strong>
+  <%= @request.location || "Не вказано" %>
+  <% if current_user == @request.user && @request.location.blank? %>
+    <span class="text-sm text-red-600">
+      (Будь ласка, <%= link_to "додайте місцезнаходження", edit_profile_path %> у вашому профілі)
+    </span>
+  <% end %>
+</p>
 
 <%# Кнопка "Завершити запит" %>
 <% if (current_user.role == "волонтер" || current_user == @request.user) && !@request.completed? %>

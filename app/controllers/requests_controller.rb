@@ -10,11 +10,16 @@ class RequestsController < ApplicationController
 
   def new
     @request = current_user.requests.build
+    @request.location = [current_user.profile.city, current_user.profile.country].compact.join(', ') if current_user.profile.present?
   end
 
   def create
     @request = current_user.requests.build(request_params.except(:status))
     @request.status = "потрібна допомога"
+
+    if @request.location.blank? && current_user.profile.present?
+      @request.location = [current_user.profile.city, current_user.profile.country].compact.join(', ')
+    end
 
     if @request.save
       redirect_to @request, notice: 'Запит створено.'
@@ -22,7 +27,6 @@ class RequestsController < ApplicationController
       render :new
     end
   end
-
 
   def edit; end
 
@@ -64,6 +68,6 @@ class RequestsController < ApplicationController
   end
 
   def request_params
-    params.require(:request).permit(:title, :description, :category, :location, :status)
+    params.require(:request).permit(:title, :description, :category, :status, :location)
   end
 end

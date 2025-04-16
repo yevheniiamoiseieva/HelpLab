@@ -1,5 +1,6 @@
 class Profile < ApplicationRecord
   belongs_to :user
+  validates :city, :country, presence: true
   has_one_attached :avatar do |attachable|
     attachable.variant :thumb, resize_to_fill: [200, 200]
   end
