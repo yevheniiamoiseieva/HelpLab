@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_user_confirmation
   def after_sign_in_path_for(resource)
-    dashboard_path
+    root_path
   end
   protected
   def check_user_confirmation
