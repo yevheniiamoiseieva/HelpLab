@@ -40,6 +40,12 @@ Rails.application.routes.draw do
 
   resources :notifications, only: [:index]
 
+  # Волонтёрский раздел (Мої чати и список откликов)
+  namespace :volunteer do
+    resources :chats, only: [:index, :show]
+    resources :responses, only: [:index, :show]
+  end
+
   # PWA / System / Health
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

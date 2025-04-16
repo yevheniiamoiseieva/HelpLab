@@ -1,0 +1,16 @@
+<h1 class="text-3xl font-bold mb-6"><%= t('volunteer.my_chats', default: "Мої чати") %></h1>
+
+<% if @chats.any? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <% @chats.each do |chat| %>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-semibold mb-2"><%= chat.title %></h2>
+        <p><%= truncate(chat.description, length: 100) %></p>
+        <%= link_to t('requests.detail', default: "Детальніше"), volunteer_chat_path(chat),
+                    class: 'text-blue-600 mt-2 inline-block' %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-gray-600"><%= t('volunteer.no_chats', default: "Поки що немає активних чатів.") %></p>
+<% end %>

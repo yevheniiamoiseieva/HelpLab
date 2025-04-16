@@ -66,18 +66,19 @@ class FeedController < ApplicationController
                                       .includes(responses: :user)
   end
 
-  # Загрузка волонтеров для отображения на карте
+  # Загрузка волонтёров для отображения на карте
   def load_volunteers_for_map
-    return unless current_user.profile&.city.present?
+    if current_user.profile&.city.present?
+      @volunteers = User.volunteers
+                        .joins(:profile)
+                        .where(profiles: { city: current_user.profile.city })
+                        .select('users.*, profiles.first_name, profiles.city, profiles.country')
+                        .limit(50)
+                        .map { |user| map_volunteer(user) }
+    else
+      @volunteers = []
+    end
 
-    @volunteers = User.volunteers
-                      .joins(:profile)
-                      .where(profiles: { city: current_user.profile.city })
-                      .select('users.*, profiles.first_name, profiles.city, profiles.country')
-                      .limit(50)
-                      .map { |user| map_volunteer(user) }
-
-    # Если необходимо оставить логирование, можно ограничить его уровнем логирования для разработки
     Rails.logger.debug "Volunteers for map: #{@volunteers.inspect}" if Rails.env.development?
   end
 
