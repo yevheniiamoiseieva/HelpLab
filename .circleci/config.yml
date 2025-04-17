@@ -6,7 +6,6 @@ executors:
       - image: cimg/ruby:3.3.6
         environment:
           BUNDLE_PATH: "vendor/bundle"
-
 jobs:
   test:
     executor: ruby-executor
