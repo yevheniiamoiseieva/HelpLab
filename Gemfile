@@ -50,16 +50,21 @@ group :development do
   gem "rails-controller-testing"
   gem "factory_bot_rails"
   gem "faker"
-
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
 
 group :test do
+  gem "rspec-rails"
+  gem "rails-controller-testing"
+  gem "factory_bot_rails"
+  gem "faker"
+
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
 end
+
 gem "devise"
 gem "active_storage_validations"
 gem "mini_magick"
