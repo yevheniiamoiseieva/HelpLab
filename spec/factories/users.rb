@@ -1,9 +1,9 @@
-# spec/factories/users.rb
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
     password { 'password123' }
     confirmed_at { Time.current }
+    role { 'regular' }  # Роль по умолчанию - regular
 
     trait :regular do
       role { 'regular' }

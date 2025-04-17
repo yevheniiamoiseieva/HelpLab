@@ -12,8 +12,8 @@ class User < ApplicationRecord
   has_many :authored_reviews, class_name: "Review", foreign_key: :author_id
 
   # Scopes
-  scope :volunteers, -> { where(role: 'volunteer') }
-  scope :regular_users, -> { where(role: 'regular') }
+  scope :volunteers, -> { where(role: "volunteer") }
+  scope :regular_users, -> { where(role: "regular") }
 
   ROLES = {
     "Волонтер" => "volunteer",
@@ -29,18 +29,18 @@ class User < ApplicationRecord
   end
 
   def volunteer?
-    role == 'volunteer'
+    role == "volunteer"
   end
 
   def regular?
-    role == 'regular'
+    role == "regular"
   end
 
   private
 
   def create_profile
     build_profile(
-      first_name: email.split('@').first,
+      first_name: email.split("@").first,
       city: "Не вказано",
       country: "Не вказано"
     ).save

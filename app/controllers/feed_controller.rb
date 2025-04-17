@@ -1,8 +1,8 @@
 class FeedController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :about]
+  before_action :authenticate_user!, except: [ :index, :about ]
 
   def index
-    @contacts = ["https://dopomoga.gov.ua", "https://pryhulky.com", "https://help.gov.ua"]
+    @contacts = [ "https://dopomoga.gov.ua", "https://pryhulky.com", "https://help.gov.ua" ]
     @news = [
       "З 1 травня змінилась адресна допомога ВПО",
       "Нові пункти обігріву у Харкові",
@@ -33,10 +33,10 @@ class FeedController < ApplicationController
 
   def become_volunteer
     if current_user
-      current_user.update(role: 'volunteer')
-      redirect_to root_path, notice: 'Вітаємо! Тепер ви волонтер.'
+      current_user.update(role: "volunteer")
+      redirect_to root_path, notice: "Вітаємо! Тепер ви волонтер."
     else
-      flash[:alert] = 'Будь ласка, спочатку зареєструйтесь.'  # Устанавливаем собственное сообщение
+      flash[:alert] = "Будь ласка, спочатку зареєструйтесь."  # Устанавливаем собственное сообщение
       redirect_to new_user_session_path
     end
   end
@@ -63,7 +63,7 @@ class FeedController < ApplicationController
 
     # Все завершенные запросы пользователя, отсортированные по дате обновления
     @completed_requests = current_user.requests
-                                      .where(status: 'Завершено')
+                                      .where(status: "Завершено")
                                       .order(updated_at: :desc)
                                       .includes(responses: :user)
   end
@@ -74,7 +74,7 @@ class FeedController < ApplicationController
       @volunteers = User.volunteers
                         .joins(:profile)
                         .where(profiles: { city: current_user.profile.city })
-                        .select('users.*, profiles.first_name, profiles.city, profiles.country')
+                        .select("users.*, profiles.first_name, profiles.city, profiles.country")
                         .limit(50)
                         .map { |user| map_volunteer(user) }
     else

@@ -28,10 +28,10 @@ class RequestsQuery
 
     def order_by(sort_option)
       case sort_option
-      when 'newest' then order(created_at: :desc)
-      when 'oldest' then order(created_at: :asc)
-      when 'most_responses' then left_joins(:responses).group(:id).order('COUNT(responses.id) DESC')
-      when 'least_responses' then left_joins(:responses).group(:id).order('COUNT(responses.id) ASC')
+      when "newest" then order(created_at: :desc)
+      when "oldest" then order(created_at: :asc)
+      when "most_responses" then left_joins(:responses).group(:id).order("COUNT(responses.id) DESC")
+      when "least_responses" then left_joins(:responses).group(:id).order("COUNT(responses.id) ASC")
       else order(created_at: :desc)
       end
     end

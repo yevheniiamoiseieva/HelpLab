@@ -12,7 +12,7 @@ module Volunteers
     config.load_defaults 7.2
     config.autoload_paths += Dir["#{config.root}/app/queries/**/"]
     # Добавьте это для Devise
-    config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+    config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.

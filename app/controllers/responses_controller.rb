@@ -3,7 +3,7 @@ class ResponsesController < ApplicationController
 
   def create
     @request = Request.find(params[:request_id])
-    @response = @request.responses.build(user: current_user, status: 'Прийнято')
+    @response = @request.responses.build(user: current_user, status: "Прийнято")
 
     if @response.save
       # Отправка email автору запроса
@@ -16,11 +16,9 @@ class ResponsesController < ApplicationController
         request: @request
       )
 
-      redirect_to @request, notice: 'Ви відгукнулись.'
+      redirect_to @request, notice: "Ви відгукнулись."
     else
-      redirect_to @request, alert: 'Помилка при відгуку.'
+      redirect_to @request, alert: "Помилка при відгуку."
     end
   end
-
 end
-

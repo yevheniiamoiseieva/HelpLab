@@ -1,8 +1,8 @@
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_own_profile, only: [:edit, :update]
-  before_action :set_profile_by_id, only: [:show]
-  before_action :set_public_profile, only: [:public_show]
+  before_action :set_own_profile, only: [ :edit, :update ]
+  before_action :set_profile_by_id, only: [ :show ]
+  before_action :set_public_profile, only: [ :public_show ]
 
   # 👤 Профіль поточного користувача
   def show
@@ -12,8 +12,6 @@ class ProfilesController < ApplicationController
     render :show
     @can_review = current_user != @profile.user && current_user.role != "Волонтер"
     @already_reviewed = @profile.user.reviews.exists?(reviewer_id: current_user.id)
-
-
   end
 
   def edit
@@ -32,7 +30,7 @@ class ProfilesController < ApplicationController
   # Для редагування свого профілю
   def set_own_profile
     @profile = current_user.profile || current_user.create_profile(
-      first_name: current_user.email.split('@').first
+      first_name: current_user.email.split("@").first
     )
   end
 
@@ -44,7 +42,7 @@ class ProfilesController < ApplicationController
   # Для перегляду чужого профілю (chat → profile)
   def set_public_profile
     user = User.find(params[:id])
-    @profile = user.profile || user.create_profile(first_name: user.email.split('@').first)
+    @profile = user.profile || user.create_profile(first_name: user.email.split("@").first)
   end
 
   def profile_params

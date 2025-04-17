@@ -14,7 +14,7 @@ require 'rspec/rails'
 RSpec.configure do |config|
   # Подключение FactoryBot синтаксиса
   config.include FactoryBot::Syntax::Methods
-
+  config.include Devise::Test::ControllerHelpers, type: :controller
   # Add additional requires below this line. Rails is not loaded until this point!
 
   # Requires supporting ruby files with custom matchers and macros, etc, in
