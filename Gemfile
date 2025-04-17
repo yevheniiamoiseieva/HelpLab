@@ -45,24 +45,28 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
-group :development do
+group :development, :test do
   gem "rspec-rails"
   gem "rails-controller-testing"
   gem "factory_bot_rails"
   gem "faker"
-  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "shoulda-matchers", "~> 5.3"
+  gem "debug", platforms: %i[mri windows], require: "debug/prelude"
+  gem "brakeman", require: false
+  gem "rubocop-rails-omakase", require: false
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "webdrivers"
+end
+
+group :development do
   gem "web-console"
 end
 
 group :test do
-  gem "rspec-rails"
-  gem "rails-controller-testing"
-  gem "factory_bot_rails"
-  gem "faker"
-
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 gem "devise"
