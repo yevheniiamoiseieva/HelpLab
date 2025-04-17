@@ -21,6 +21,27 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+  lint:
+    docker:
+      - image: cimg/ruby:3.3-node # Ruby + Node.js (для Webpacker)
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - rails-demo-bundler-{{ checksum "Gemfile.lock" }}
+            - rails-demo-bundler-
+      - run:
+          name: Install Bundler and Gems
+          command: |
+            gem install bundler -v 2.4.22
+            bundle install
+      - save_cache:
+          key: rails-demo-bundler-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Run RuboCop
+          command: bundle exec rubocop
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
@@ -29,3 +50,6 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - say-hello
+  lint:
+    jobs:
+      - lint
