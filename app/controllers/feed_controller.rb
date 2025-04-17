@@ -2,6 +2,13 @@ class FeedController < ApplicationController
   before_action :authenticate_user!, except: [:index, :about]
 
   def index
+    @contacts = ["https://dopomoga.gov.ua", "https://pryhulky.com", "https://help.gov.ua"]
+    @news = [
+      "З 1 травня змінилась адресна допомога ВПО",
+      "Нові пункти обігріву у Харкові",
+      "Пільги для оренди житла для переселенців"
+    ]
+
     return unless current_user
 
     if current_user.volunteer?
@@ -11,15 +18,9 @@ class FeedController < ApplicationController
     end
 
     load_volunteers_for_map
-
-    # Дополнительная информация, доступная на главной странице
-    @contacts = ["https://dopomoga.gov.ua", "https://pryhulky.com", "https://help.gov.ua"]
-    @news = [
-      "З 1 травня змінилась адресна допомога ВПО",
-      "Нові пункти обігріву у Харкові",
-      "Пільги для оренди житла для переселенців"
-    ]
   end
+
+
 
   def about
     @team_members = [
@@ -35,7 +36,8 @@ class FeedController < ApplicationController
       current_user.update(role: 'volunteer')
       redirect_to root_path, notice: 'Вітаємо! Тепер ви волонтер.'
     else
-      redirect_to new_user_registration_path, alert: 'Будь ласка, спочатку зареєструйтесь.'
+      flash[:alert] = 'Будь ласка, спочатку зареєструйтесь.'  # Устанавливаем собственное сообщение
+      redirect_to new_user_session_path
     end
   end
 
@@ -66,18 +68,19 @@ class FeedController < ApplicationController
                                       .includes(responses: :user)
   end
 
-  # Загрузка волонтеров для отображения на карте
+  # Загрузка волонтёров для отображения на карте
   def load_volunteers_for_map
-    return unless current_user.profile&.city.present?
+    if current_user.profile&.city.present?
+      @volunteers = User.volunteers
+                        .joins(:profile)
+                        .where(profiles: { city: current_user.profile.city })
+                        .select('users.*, profiles.first_name, profiles.city, profiles.country')
+                        .limit(50)
+                        .map { |user| map_volunteer(user) }
+    else
+      @volunteers = []
+    end
 
-    @volunteers = User.volunteers
-                      .joins(:profile)
-                      .where(profiles: { city: current_user.profile.city })
-                      .select('users.*, profiles.first_name, profiles.city, profiles.country')
-                      .limit(50)
-                      .map { |user| map_volunteer(user) }
-
-    # Если необходимо оставить логирование, можно ограничить его уровнем логирования для разработки
     Rails.logger.debug "Volunteers for map: #{@volunteers.inspect}" if Rails.env.development?
   end
 

@@ -1,0 +1,26 @@
+<h1>Чат по запиту: <%= @request.title %></h1>
+
+<% if @messages.any? %>
+  <div class="chat-messages mb-6">
+    <% @messages.each do |message| %>
+      <div class="<%= message.sender == current_user ? 'text-right' : 'text-left' %>">
+        <p class="inline-block bg-gray-100 p-2 rounded">
+          <%= message.body %>
+        </p>
+        <small class="block text-xs text-gray-500">
+          <%= message.created_at.strftime("%d.%m.%Y %H:%M") %>
+        </small>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>Повідомлень поки що немає.</p>
+<% end %>
+
+<!-- Форма для отправки нового сообщения -->
+<%= form_with(url: request_messages_path(@request), method: :post, local: true) do |f| %>
+  <div class="mb-4">
+    <%= f.text_area :body, rows: 2, placeholder: "Напишіть повідомлення...", class: "w-full p-2 border rounded" %>
+  </div>
+  <%= f.submit "Надіслати", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+<% end %>

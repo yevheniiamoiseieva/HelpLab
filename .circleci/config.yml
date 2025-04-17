@@ -1,3 +1,4 @@
+
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
@@ -28,4 +29,35 @@ workflows:
   say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - say-hello
+      - say-hell
+version: 2.1
+
+executors:
+  ruby-executor:
+    docker:
+      - image: cimg/ruby:3.3.6
+        environment:
+          BUNDLE_PATH: "vendor/bundle"
+
+jobs:
+  test:
+    executor: ruby-executor
+    steps:
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y build-essential
+      - run: gem install bundler
+      - run: bundle install
+      - run: bundle exec rspec
+  lint:
+    executor: ruby-executor
+    steps:
+      - checkout
+      - run: gem install rubocop
+      - run: rubocop
+
+workflows:
+  version: 2
+  test_and_lint:
+    jobs:
+      - lint
+      - test

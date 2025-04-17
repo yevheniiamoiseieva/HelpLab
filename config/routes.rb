@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # Главная страница — лента запросов
   get "feed/index"
   root "feed#index"
+  post '/become_volunteer', to: 'feed#become_volunteer', as: :become_volunteer
 
   get 'dashboard', to: 'home#dashboard', as: :dashboard
   get '/about', to: 'feed#about', as: 'about'
@@ -39,6 +40,12 @@ Rails.application.routes.draw do
   end
 
   resources :notifications, only: [:index]
+
+  # Волонтёрский раздел (Мої чати и список откликов)
+  namespace :volunteer do
+    resources :chats, only: [:index, :show]
+    resources :responses, only: [:index, :show]
+  end
 
   # PWA / System / Health
   if Rails.env.development?
