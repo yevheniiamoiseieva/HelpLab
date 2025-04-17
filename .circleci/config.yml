@@ -42,6 +42,39 @@ jobs:
       - run:
           name: Run RuboCop
           command: bundle exec rubocop
+  test:
+    docker:
+      - image: cimg/ruby:3.3-node
+      - image: cimg/postgres:14.5
+        environment:
+          POSTGRES_USER: rails_test
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: rails_test
+    environment:
+      RAILS_ENV: test
+      DATABASE_URL: "postgresql://rails_test@localhost:5432/rails_test"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - rails-demo-bundler-{{ checksum "Gemfile.lock" }}
+            - rails-demo-bundler-
+      - run:
+          name: Install Bundler and Gems
+          command: |
+            gem install bundler -v 2.4.22
+            bundle install
+      - save_cache:
+          key: rails-demo-bundler-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: Database Setup
+          command: |
+            bin/rails db:prepare
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
@@ -53,3 +86,6 @@ workflows:
   lint:
     jobs:
       - lint
+  test:
+    jobs:
+      - test
