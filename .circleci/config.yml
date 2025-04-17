@@ -16,7 +16,6 @@ jobs:
       - run: gem install bundler
       - run: bundle install
       - run: bundle exec rspec
-
   lint:
     executor: ruby-executor
     steps:
