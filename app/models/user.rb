@@ -25,7 +25,7 @@ class User < ApplicationRecord
   after_create :create_profile
 
   def average_rating
-    reviews.average(:rating) || 0
+    reviews.average(:rating).to_f.round(1) || 0
   end
 
   def volunteer?

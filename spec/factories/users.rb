@@ -3,7 +3,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { 'password123' }
     confirmed_at { Time.current }
-    role { 'regular' }  # Роль по умолчанию - regular
+    role { 'regular' }
 
     trait :regular do
       role { 'regular' }

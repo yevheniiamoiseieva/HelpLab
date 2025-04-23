@@ -3,5 +3,5 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: "User"
   belongs_to :receiver, class_name: "User"
 
-  validates :body, presence: true
+  validates :body, presence: true, length: { minimum: 2, maximum: 1000 }
 end
