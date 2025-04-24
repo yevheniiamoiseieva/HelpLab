@@ -6,7 +6,6 @@ class MessagesController < ApplicationController
     @new_message = Message.new
 
     if current_user == @request.user
-      # Автор запиту — бачить список волонтерів
       if params[:partner_id].present?
         @companion = User.find_by(id: params[:partner_id])
         if @companion
@@ -19,7 +18,6 @@ class MessagesController < ApplicationController
         @messages = []
       end
     else
-      # Волонтер — автоматично бачить чат з автором запиту
       @companion = @request.user
       load_messages(@companion)
     end

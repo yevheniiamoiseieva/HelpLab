@@ -5,8 +5,8 @@ class Request < ApplicationRecord
   has_many :volunteers, through: :responses, source: :user
   has_one :profile, through: :user
 
-  CATEGORIES = ["Продукти", "Одяг", "Техніка", "Мебелі"]
-  STATUSES = ["Потрібна допомога", "У процесі", "Завершено"]
+  CATEGORIES = [ "Продукти", "Одяг", "Техніка", "Мебелі" ]
+  STATUSES = [ "Потрібна допомога", "У процесі", "Завершено" ]
 
   scope :active, -> { where.not(status: "Завершено") }
   scope :with_responses, -> { joins(:responses).distinct }
@@ -16,8 +16,6 @@ class Request < ApplicationRecord
   scope :search, ->(query) { where("title ILIKE ? OR description ILIKE ?", "%#{query}%", "%#{query}%") }
 
   validates :title, :description, :category, :location, :status, presence: true
-  validates :status, inclusion: { in: STATUSES }
-
   before_validation :set_location_from_profile, on: :create
 
   def responses_count
@@ -25,17 +23,12 @@ class Request < ApplicationRecord
   end
 
   def completed?
-    status.to_s.downcase == "завершено"
-  end
-
-  def close
-    update(status: "Завершено")
-    # Здесь можно добавить логику уведомлений и действий
+    status == "Завершено" || status == "завершено"
   end
 
   private
 
   def set_location_from_profile
-    self.location ||= [profile&.city, profile&.country].compact.join(", ")
+    self.location ||= [ profile.city, profile.country ].compact.join(", ") if profile.present?
   end
 end
