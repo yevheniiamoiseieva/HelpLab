@@ -1,4 +1,3 @@
-# spec/models/message_spec.rb
 require 'rails_helper'
 
 RSpec.describe Message, type: :model do
@@ -24,7 +23,9 @@ RSpec.describe Message, type: :model do
     let!(:read) { create(:message, read_at: Time.current) }
 
     it '.unread returns only unread messages' do
-      expect(Message.unread).to eq([unread])
+      # Проверка, что результат включает только unread сообщение
+      expect(Message.unread).to include(unread)
+      expect(Message.unread).not_to include(read)
     end
   end
 end

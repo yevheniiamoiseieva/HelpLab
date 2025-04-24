@@ -13,8 +13,8 @@ RSpec.describe Response, type: :model do
   end
 
   describe 'scopes' do
-    let!(:pending) { create(:response, status: 'pending') }
-    let!(:accepted) { create(:response, status: 'accepted') }
+    let!(:pending) { create(:response, status: 'Очікує') }  # Используем корректный статус
+    let!(:accepted) { create(:response, status: 'Прийнято') }
 
     it '.pending returns only pending responses' do
       expect(Response.pending).to eq([pending])

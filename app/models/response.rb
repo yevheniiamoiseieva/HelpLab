@@ -5,7 +5,8 @@ class Response < ApplicationRecord
 
   STATUSES = ['Прийнято', 'Відхилено', 'Очікує']
 
-  validates :status, inclusion: { in: STATUSES }
+  # Добавляем валидацию присутствия
+  validates :status, presence: true, inclusion: { in: STATUSES }
 
   scope :pending, -> { where(status: 'Очікує') }
 end

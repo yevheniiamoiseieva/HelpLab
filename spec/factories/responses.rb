@@ -1,7 +1,6 @@
-# spec/factories/responses.rb
 FactoryBot.define do
   factory :response do
-    status { "Прийнято" } # или "Відхилено"
+    status { "Прийнято" } # Используйте одно из допустимых значений из списка STATUSES
     association :user
     association :request
   end

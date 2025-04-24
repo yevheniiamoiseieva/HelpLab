@@ -54,6 +54,9 @@ group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 group :development do
@@ -63,6 +66,7 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 gem "devise"

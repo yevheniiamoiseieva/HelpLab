@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_24_070728) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_24_095125) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,9 +61,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_24_070728) do
     t.bigint "user_id", null: false
     t.string "message"
     t.boolean "read", default: false
+    t.bigint "request_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "request_id"
+    t.datetime "read_at"
     t.index ["request_id"], name: "index_notifications_on_request_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
@@ -104,14 +105,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_24_070728) do
   end
 
   create_table "reviews", force: :cascade do |t|
-    t.bigint "reviewer_id", null: false
+    t.bigint "author_id", null: false
     t.bigint "reviewed_user_id", null: false
     t.integer "rating", null: false
-    t.text "comment"
+    t.text "comment", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id", "reviewed_user_id"], name: "index_reviews_on_author_id_and_reviewed_user_id", unique: true
+    t.index ["author_id"], name: "index_reviews_on_author_id"
     t.index ["reviewed_user_id"], name: "index_reviews_on_reviewed_user_id"
-    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -144,6 +146,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_24_070728) do
   add_foreign_key "requests", "users"
   add_foreign_key "responses", "requests"
   add_foreign_key "responses", "users"
+  add_foreign_key "reviews", "users", column: "author_id"
   add_foreign_key "reviews", "users", column: "reviewed_user_id"
-  add_foreign_key "reviews", "users", column: "reviewer_id"
 end
