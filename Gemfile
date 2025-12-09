@@ -50,7 +50,7 @@ group :development, :test do
   gem "rails-controller-testing"
   gem "factory_bot_rails"
   gem "faker"
-  gem "shoulda-matchers", "~> 5.3"
+  gem "shoulda-matchers", "~> 7.0"
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
